@@ -46,6 +46,14 @@ IsTextTarget() {
         if winClass ~= "i)CASCADIA_HOSTING|ConsoleWindowClass|mintty|VirtualConsole|PuTTY"
             return true
 
+        ; --- Chromium/Electron (Edge, Chrome, Perplexity, VS Code…) ---
+        if winClass ~= "i)Chrome_WidgetWin"
+            return true
+
+        ; --- Windows Explorer (address bar, search bar, rename) ---
+        if winClass ~= "i)CabinetWClass|ExploreWClass"
+            return true
+
         ; --- Win32 text controls (Edit, RichEdit, Scintilla…) ---
         try {
             focused := ControlGetFocus("A")
