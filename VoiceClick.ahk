@@ -75,6 +75,69 @@ F2:: {
 TriggerDictation() {
     SendInput("{LWin down}h{LWin up}")
     SetTimer(MoveDictationBar, -350)
+    SetTimer(KillDictationWarning, -400)
+}
+
+KillDictationWarning() {
+    static phrases := ["risquent de ne pas fonctionner", "saisir une zone de texte", "veuillez saisir", "may not work in this app", "please focus on a text"]
+    static procs := ["TextInputHost.exe", "WindowsInternal.ComposableShell.Experiences.TextInput.InputApp.exe"]
+    deadline := A_TickCount + 2500
+    while (A_TickCount < deadline) {
+        for proc in procs {
+            for hwnd in WinGetList("ahk_exe " . proc) {
+                try {
+                    if !(WinGetStyle(hwnd) & 0x10000000)
+                        continue
+                    content := ReadWindowAccText(hwnd)
+                    for p in phrases {
+                        if InStr(content, p) {
+                            try WinClose(hwnd)
+                            return
+                        }
+                    }
+                }
+            }
+        }
+        Sleep(200)
+    }
+}
+
+ReadWindowAccText(hwnd) {
+    out := ""
+    try {
+        guid := Buffer(16, 0)
+        DllCall("ole32\CLSIDFromString", "wstr", "{618736E0-3C3D-11CF-810C-00AA00389B71}", "ptr", guid)
+        pacc := 0
+        if DllCall("oleacc\AccessibleObjectFromWindow", "ptr", hwnd, "uint", 0xFFFFFFFC, "ptr", guid, "ptr*", &pacc) = 0 && pacc {
+            acc := ComValue(9, pacc, 1)
+            out := AccRecurse(acc, 0)
+        }
+    }
+    return out
+}
+
+AccRecurse(acc, depth) {
+    if (depth > 5)
+        return ""
+    out := ""
+    try {
+        n := acc.accName(0)
+        if n
+            out .= n . " "
+    }
+    try {
+        count := acc.accChildCount
+        if (count > 0 && count < 80) {
+            Loop count {
+                try {
+                    child := acc.accChild(A_Index)
+                    if IsObject(child)
+                        out .= AccRecurse(child, depth + 1)
+                }
+            }
+        }
+    }
+    return out
 }
 
 MoveDictationBar() {
