@@ -19,15 +19,26 @@ VoiceClick only activates in text inputs (edit fields, terminals, search bars), 
 |--------|-----------|
 | Terminals (Windows Terminal, cmd, PowerShell, Git Bash, PuTTY) | Window class |
 | Standard text fields (Notepad, dialogs, search bars) | Control class (Edit, RichEdit, Scintilla) |
-| Other apps with text cursor | Caret position |
+| Chromium browsers (Chrome, Edge, Opera, Brave) and Windows Explorer | UIAutomation (focused element + mouse inside its rect) |
+| Other apps with text cursor | Caret position / MSAA |
 
-## Install
+## Install (recommended)
+
+1. Download **VoiceClick.exe** from the [latest release](../../releases/latest)
+2. Double-click — accept the UAC prompt (needed so it can act inside elevated PowerShell/terminals)
+3. Press F1 to arm
+
+No AutoHotkey install required: the exe is self-contained.
+
+For auto-start: drop a shortcut in `Win+R` → `shell:startup`.
+
+## Install (from source)
+
+For developers or users who prefer the raw script:
 
 1. Install [AutoHotkey v2](https://www.autohotkey.com/) (free)
 2. Download `VoiceClick.ahk`
 3. Double-click to run
-
-Optional: place a shortcut in your Startup folder (`Win+R` → `shell:startup`) to launch it automatically.
 
 ## Mute the dictation sound
 

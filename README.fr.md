@@ -19,15 +19,26 @@ VoiceClick ne s'active que dans les zones de saisie (champs texte, terminaux, ba
 |-------|-----------|
 | Terminaux (Windows Terminal, cmd, PowerShell, Git Bash, PuTTY) | Classe de fenêtre |
 | Champs texte classiques (Bloc-notes, boîtes de dialogue, barres de recherche) | Classe de contrôle (Edit, RichEdit, Scintilla) |
-| Autres applications avec curseur texte | Position du caret |
+| Navigateurs Chromium (Chrome, Edge, Opera, Brave) et Explorateur Windows | UIAutomation (élément focusé + curseur dans sa zone) |
+| Autres applications avec curseur texte | Position du caret / MSAA |
 
-## Installation
+## Installation (recommandée)
+
+1. Télécharger **VoiceClick.exe** depuis la [dernière release](../../releases/latest)
+2. Double-cliquer — accepter l'élévation UAC (nécessaire pour agir dans PowerShell/terminaux admin)
+3. F1 pour activer
+
+Aucune installation d'AutoHotkey n'est requise : l'exe est autonome.
+
+Pour un démarrage automatique : placer un raccourci dans `Win+R` → `shell:startup`.
+
+## Installation (source)
+
+Alternative pour développeurs ou utilisateurs qui préfèrent le script brut :
 
 1. Installer [AutoHotkey v2](https://www.autohotkey.com/) (gratuit)
 2. Télécharger `VoiceClick.ahk`
 3. Double-cliquer pour lancer
-
-Optionnel : placer un raccourci dans le dossier Démarrage (`Win+R` → `shell:startup`) pour le lancer automatiquement.
 
 ## Couper le son de la dictée
 
