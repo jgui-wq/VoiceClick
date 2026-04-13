@@ -13,22 +13,8 @@ if !A_IsAdmin {
     ExitApp
 }
 
-; Force per-monitor DPI awareness (fixes coordinate mismatch on multi-monitor setups)
-DllCall("SetProcessDpiAwarenessContext", "ptr", -4, "int")
-
 global DictationMode := false
 A_IconTip := "VoiceClick — inactive"
-
-IsOnLocalScreen() {
-    MouseGetPos(&mx, &my)
-    monCount := MonitorGetCount()
-    Loop monCount {
-        MonitorGet(A_Index, &mL, &mT, &mR, &mB)
-        if (mx >= mL && mx < mR && my >= mT && my < mB)
-            return true
-    }
-    return false
-}
 
 F1:: {
     global DictationMode
@@ -37,8 +23,7 @@ F1:: {
         A_IconTip := "VoiceClick — ACTIVE"
         ToolTip("VoiceClick ON")
         SetTimer(() => ToolTip(), -1500)
-        if IsOnLocalScreen()
-            TriggerDictation()
+        TriggerDictation()
     } else {
         A_IconTip := "VoiceClick — inactive"
         ToolTip("VoiceClick OFF")
@@ -48,7 +33,7 @@ F1:: {
 
 ~LButton:: {
     global DictationMode
-    if DictationMode && IsOnLocalScreen() {
+    if DictationMode {
         KeyWait("LButton")
         SetTimer(TryDictation, -200)
     }
@@ -57,8 +42,6 @@ F1:: {
 TryDictation() {
     ; Retry up to 8× (100ms apart) to let the caret appear (Chromium/Explorer lag, multi-monitor)
     Loop 8 {
-        if !IsOnLocalScreen()
-            return
         if IsTextTarget() {
             TriggerDictation()
             return
