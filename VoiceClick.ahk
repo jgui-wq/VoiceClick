@@ -40,8 +40,8 @@ F1:: {
 }
 
 TryDictation() {
-    ; Retry up to 8× (100ms apart) to let the caret appear (Chromium/Explorer lag, multi-monitor)
-    Loop 8 {
+    ; Retry up to 5× (100ms apart) to let the caret appear (Chromium/Explorer lag)
+    Loop 5 {
         if IsTextTarget() {
             TriggerDictation()
             return
@@ -141,18 +141,6 @@ AccRecurse(acc, depth) {
 }
 
 MoveDictationBar() {
-    ; Detect which monitor the mouse/active window is on
-    MouseGetPos(&mx, &my)
-    targetMon := MonitorGetPrimary()
-    monCount := MonitorGetCount()
-    Loop monCount {
-        MonitorGet(A_Index, &mL, &mT, &mR, &mB)
-        if (mx >= mL && mx < mR && my >= mT && my < mB) {
-            targetMon := A_Index
-            break
-        }
-    }
-
     Loop 8 {
         for hwnd in WinGetList("ahk_exe TextInputHost.exe") {
             try {
@@ -162,7 +150,7 @@ MoveDictationBar() {
                 WinGetPos(&x, &y, &w, &h, hwnd)
                 if (w < 120 || h < 40)  ; skip tiny IME popups
                     continue
-                MonitorGetWorkArea(targetMon, &mL, &mT, &mR, &mB)
+                MonitorGetWorkArea(MonitorGetPrimary(), &mL, &mT, &mR, &mB)
                 WinMove(mR - w - 20, mB - h - 20, , , hwnd)
                 return
             }
