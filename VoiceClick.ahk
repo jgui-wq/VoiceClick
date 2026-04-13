@@ -230,38 +230,8 @@ UIAIsFocusedEditable() {
             DllCall("oleaut32\VariantClear", "ptr", varBuf)
         }
 
-        if !(ctrl = 50004 || ctrl = 50030 || ctrl = 50003) {
-            ObjRelease(element)
-            return false
-        }
-
-        ; Verify mouse click actually lands inside focused element's bounding rect
-        ; Tolerance margin accounts for DPI rounding across monitors
-        MouseGetPos(&mx, &my)
-        rectBuf := Buffer(24, 0)
-        inside := false
-        margin := 15
-        if ComCall(10, element, "int", 30001, "ptr", rectBuf) = 0 {  ; BoundingRect
-            vt := NumGet(rectBuf, 0, "ushort")
-            if (vt = (0x2000 | 5)) {  ; VT_ARRAY|VT_R8
-                psa := NumGet(rectBuf, 8, "ptr")
-                if psa {
-                    pData := 0
-                    if DllCall("oleaut32\SafeArrayAccessData", "ptr", psa, "ptr*", &pData) = 0 {
-                        L := NumGet(pData, 0, "double")
-                        T := NumGet(pData, 8, "double")
-                        W := NumGet(pData, 16, "double")
-                        H := NumGet(pData, 24, "double")
-                        DllCall("oleaut32\SafeArrayUnaccessData", "ptr", psa)
-                        if (W > 0 && H > 0 && mx >= L - margin && mx < L + W + margin && my >= T - margin && my < T + H + margin)
-                            inside := true
-                    }
-                }
-            }
-            DllCall("oleaut32\VariantClear", "ptr", rectBuf)
-        }
         ObjRelease(element)
-        return inside
+        return (ctrl = 50004 || ctrl = 50030 || ctrl = 50003)
     } catch {
         if element
             try ObjRelease(element)
