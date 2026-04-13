@@ -13,6 +13,9 @@ if !A_IsAdmin {
     ExitApp
 }
 
+; Force per-monitor DPI awareness (fixes coordinate mismatch on multi-monitor setups)
+DllCall("SetProcessDpiAwarenessContext", "ptr", -4, "int")
+
 global DictationMode := false
 A_IconTip := "VoiceClick — inactive"
 
@@ -40,8 +43,8 @@ F1:: {
 }
 
 TryDictation() {
-    ; Retry up to 5× (100ms apart) to let the caret appear (Chromium/Explorer lag)
-    Loop 5 {
+    ; Retry up to 8× (100ms apart) to let the caret appear (Chromium/Explorer lag, multi-monitor)
+    Loop 8 {
         if IsTextTarget() {
             TriggerDictation()
             return
@@ -141,6 +144,18 @@ AccRecurse(acc, depth) {
 }
 
 MoveDictationBar() {
+    ; Detect which monitor the mouse/active window is on
+    MouseGetPos(&mx, &my)
+    targetMon := MonitorGetPrimary()
+    monCount := MonitorGetCount()
+    Loop monCount {
+        MonitorGet(A_Index, &mL, &mT, &mR, &mB)
+        if (mx >= mL && mx < mR && my >= mT && my < mB) {
+            targetMon := A_Index
+            break
+        }
+    }
+
     Loop 8 {
         for hwnd in WinGetList("ahk_exe TextInputHost.exe") {
             try {
@@ -150,7 +165,7 @@ MoveDictationBar() {
                 WinGetPos(&x, &y, &w, &h, hwnd)
                 if (w < 120 || h < 40)  ; skip tiny IME popups
                     continue
-                MonitorGetWorkArea(MonitorGetPrimary(), &mL, &mT, &mR, &mB)
+                MonitorGetWorkArea(targetMon, &mL, &mT, &mR, &mB)
                 WinMove(mR - w - 20, mB - h - 20, , , hwnd)
                 return
             }
@@ -224,9 +239,11 @@ UIAIsFocusedEditable() {
         }
 
         ; Verify mouse click actually lands inside focused element's bounding rect
+        ; Tolerance margin accounts for DPI rounding across monitors
         MouseGetPos(&mx, &my)
         rectBuf := Buffer(24, 0)
         inside := false
+        margin := 15
         if ComCall(10, element, "int", 30001, "ptr", rectBuf) = 0 {  ; BoundingRect
             vt := NumGet(rectBuf, 0, "ushort")
             if (vt = (0x2000 | 5)) {  ; VT_ARRAY|VT_R8
@@ -239,7 +256,7 @@ UIAIsFocusedEditable() {
                         W := NumGet(pData, 16, "double")
                         H := NumGet(pData, 24, "double")
                         DllCall("oleaut32\SafeArrayUnaccessData", "ptr", psa)
-                        if (W > 0 && H > 0 && mx >= L && mx < L + W && my >= T && my < T + H)
+                        if (W > 0 && H > 0 && mx >= L - margin && mx < L + W + margin && my >= T - margin && my < T + H + margin)
                             inside := true
                     }
                 }
