@@ -43,9 +43,7 @@ jobs:
 
       - name: Publish Release (on tag)
         if: startsWith(github.ref, 'refs/tags/v')
-        uses: softprops/action-gh-release@v2
-        with:
-          files: VoiceClick.exe
-          generate_release_notes: true
+        shell: bash
+        run: gh release create "${{ github.ref_name }}" VoiceClick.exe --generate-notes --title "VoiceClick ${{ github.ref_name }}"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
