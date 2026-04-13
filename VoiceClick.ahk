@@ -50,28 +50,6 @@ TryDictation() {
     }
 }
 
-F2:: {
-    path := A_ScriptDir . "\dictbar_debug.txt"
-    out := "=== " . A_Now . " ===`n"
-    for hwnd in WinGetList() {
-        try {
-            style := WinGetStyle(hwnd)
-            if !(style & 0x10000000)
-                continue
-            WinGetPos(&x, &y, &w, &h, hwnd)
-            if (w < 50 || h < 20)
-                continue
-            exe := WinGetProcessName(hwnd)
-            cls := WinGetClass(hwnd)
-            ttl := WinGetTitle(hwnd)
-            out .= Format("exe={1}  class={2}  size={3}x{4}  title={5}`n", exe, cls, w, h, ttl)
-        }
-    }
-    FileAppend(out . "`n", path)
-    ToolTip("Dumped to " . path)
-    SetTimer(() => ToolTip(), -2000)
-}
-
 TriggerDictation() {
     SendInput("{LWin down}h{LWin up}")
     SetTimer(MoveDictationBar, -350)
