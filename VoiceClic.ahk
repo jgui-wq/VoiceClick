@@ -2,7 +2,7 @@
 #SingleInstance Force
 
 ; ================================================================
-; VoiceClick — Windows Voice Typing on left click
+; VoiceClic — Windows Voice Typing on left click
 ; Press F1 to toggle, then click any text field to dictate
 ; Only activates in text inputs and terminals
 ; ================================================================
@@ -14,19 +14,19 @@ if !A_IsAdmin {
 }
 
 global DictationMode := false
-A_IconTip := "VoiceClick — inactive"
+A_IconTip := "VoiceClic — inactive"
 
 F1:: {
     global DictationMode
     DictationMode := !DictationMode
     if DictationMode {
-        A_IconTip := "VoiceClick — ACTIVE"
-        ToolTip("VoiceClick ON")
+        A_IconTip := "VoiceClic — ACTIVE"
+        ToolTip("VoiceClic ON")
         SetTimer(() => ToolTip(), -1500)
         TriggerDictation()
     } else {
-        A_IconTip := "VoiceClick — inactive"
-        ToolTip("VoiceClick OFF")
+        A_IconTip := "VoiceClic — inactive"
+        ToolTip("VoiceClic OFF")
         SetTimer(() => ToolTip(), -1500)
     }
 }

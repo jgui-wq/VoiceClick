@@ -1,6 +1,6 @@
-# VoiceClick
+# VoiceClic
 
-Dictate anywhere with a click. VoiceClick turns Windows built-in Voice Typing (Win+H) into a click-to-dictate tool — press F1 to arm it, then click any text field to start dictating.
+Dictate anywhere with a click. VoiceClic turns Windows built-in Voice Typing (Win+H) into a click-to-dictate tool — press F1 to arm it, then click any text field to start dictating.
 
 ![Windows 10/11](https://img.shields.io/badge/Windows-10%20%7C%2011-blue) ![AutoHotkey v2](https://img.shields.io/badge/AutoHotkey-v2.0-green) ![License MIT](https://img.shields.io/badge/License-MIT-yellow)
 
@@ -11,7 +11,7 @@ Dictate anywhere with a click. VoiceClick turns Windows built-in Voice Typing (W
 3. Speak — your words appear as text
 4. **Click** another field — dictation follows your cursor
 
-VoiceClick only activates in text inputs (edit fields, terminals, search bars), not on buttons, menus, or the taskbar.
+VoiceClic only activates in text inputs (edit fields, terminals, search bars), not on buttons, menus, or the taskbar.
 
 ## Supported targets
 
@@ -24,7 +24,7 @@ VoiceClick only activates in text inputs (edit fields, terminals, search bars), 
 
 ## Install (recommended)
 
-1. Download **VoiceClick.exe** from the [latest release](../../releases/latest)
+1. Download **VoiceClic.exe** from the [latest release](../../releases/latest)
 2. Double-click — accept the UAC prompt (needed so it can act inside elevated PowerShell/terminals)
 3. Press F1 to arm
 
@@ -37,7 +37,7 @@ For auto-start: drop a shortcut in `Win+R` → `shell:startup`.
 For developers or users who prefer the raw script:
 
 1. Install [AutoHotkey v2](https://www.autohotkey.com/) (free)
-2. Download `VoiceClick.ahk`
+2. Download `VoiceClic.ahk`
 3. Double-click to run
 
 ## Mute the dictation sound
