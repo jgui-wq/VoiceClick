@@ -13,7 +13,7 @@ jobs:
   build:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Install AutoHotkey v2
         shell: pwsh
@@ -36,7 +36,7 @@ jobs:
           & .\ahk2exe\Ahk2Exe.exe /in VoiceClic.ahk /out VoiceClic.exe /base "$env:AHK_DIR\AutoHotkey64.exe"
           if (-not (Test-Path VoiceClic.exe)) { throw "Compilation failed" }
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         with:
           name: VoiceClic
           path: VoiceClic.exe
