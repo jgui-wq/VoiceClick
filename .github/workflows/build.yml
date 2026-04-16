@@ -1,4 +1,4 @@
-name: Build VoiceClick.exe
+name: Build VoiceClic.exe
 
 on:
   push:
@@ -30,20 +30,20 @@ jobs:
           Invoke-WebRequest -Uri $url -OutFile ahk2exe.zip
           Expand-Archive -Path ahk2exe.zip -DestinationPath ahk2exe
 
-      - name: Compile VoiceClick.exe
+      - name: Compile VoiceClic.exe
         shell: pwsh
         run: |
-          & .\ahk2exe\Ahk2Exe.exe /in VoiceClick.ahk /out VoiceClick.exe /base "$env:AHK_DIR\AutoHotkey64.exe"
-          if (-not (Test-Path VoiceClick.exe)) { throw "Compilation failed" }
+          & .\ahk2exe\Ahk2Exe.exe /in VoiceClic.ahk /out VoiceClic.exe /base "$env:AHK_DIR\AutoHotkey64.exe"
+          if (-not (Test-Path VoiceClic.exe)) { throw "Compilation failed" }
 
       - uses: actions/upload-artifact@v4
         with:
-          name: VoiceClick
-          path: VoiceClick.exe
+          name: VoiceClic
+          path: VoiceClic.exe
 
       - name: Publish Release (on tag)
         if: startsWith(github.ref, 'refs/tags/v')
         shell: bash
-        run: gh release create "${{ github.ref_name }}" VoiceClick.exe --generate-notes --title "VoiceClick ${{ github.ref_name }}"
+        run: gh release create "${{ github.ref_name }}" VoiceClic.exe --generate-notes --title "VoiceClic ${{ github.ref_name }}"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
